@@ -1,4 +1,7 @@
+import bcrypt from 'bcrypt'
 import registersuer from '../models/registersuer.js'
+
+const SALT_ROUNDS = 10
 
 const registerUser = async (req, res) => {
 
@@ -9,7 +12,9 @@ const registerUser = async (req, res) => {
         if (isExist) {
             return res.status(400).send("user already exist")
         }
-        await registersuer.create({ name, email, password, role: "user" })
+
+        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
+        await registersuer.create({ name, email, password: hashedPassword, role: "user" })
         res.status(200).send("user created sucessfully")
     } catch (error) {
         res.send({
