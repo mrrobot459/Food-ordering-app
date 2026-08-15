@@ -7,6 +7,9 @@ const registerUser = async (req, res) => {
 
     try {
         const { name, email, password } = req.body
+        if (password.length > 16) {
+            return res.status(400).send("the password length should be in 16 characters")
+        }
 
         const isExist = await registersuer.findOne({ email })
         if (isExist) {
